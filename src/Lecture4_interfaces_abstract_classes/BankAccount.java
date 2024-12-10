@@ -1,29 +1,37 @@
 package Lecture4_interfaces_abstract_classes;
 
-public class BankAccount {
-    private double balance;
+import org.jetbrains.annotations.NotNull;
 
-    public BankAccount(double initialBalance) {
-        this.balance = initialBalance;
+import java.util.Calendar;
+
+public abstract class BaseTransaction implements TransactionInterface {
+    private final double amount;
+    private final Calendar date;
+    private final String transactionID;
+
+    public BaseTransaction(double amount, @NotNull Calendar date) {
+        this.amount = amount;
+        this.date = (Calendar) date.clone();
+        int uniq = (int) (Math.random() * 10000);
+        this.transactionID = date.toString() + uniq;
     }
 
-    public double getBalance() {
-        return balance;
+    @Override
+    public double getAmount() {
+        return amount;
     }
 
-    public void setBalance(double balance) {
-        this.balance = balance;
+    @Override
+    public Calendar getDate() {
+        return (Calendar) date.clone();
     }
 
-    public void deposit(double amount) {
-        balance += amount;
+    @Override
+    public String getTransactionID() {
+        return transactionID;
     }
 
-    public void withdraw(double amount) {
-        balance -= amount;
-    }
+    public abstract void printTransactionDetails();
 
-    public void printAccountDetails() {
-        System.out.println("Account Balance: " + balance);
-    }
+    public abstract void apply(BankAccount ba) throws InsufficientFundsException;
 }
